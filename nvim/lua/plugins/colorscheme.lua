@@ -9,9 +9,9 @@ return {
             palette = {
                 main = {
                     base = "#1e1e1e",
-                    pine = "#7f9f9f",
+                    pine = "#728296",
                     gold = "#f9bd98",
-                    foam = "#bedfe0",
+                    foam = "#bacacc",
                     iris = "#cf637e",
                 },
             },
