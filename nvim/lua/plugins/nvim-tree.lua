@@ -16,5 +16,8 @@ return {
       })
       vim.keymap.set("n", "<leader>nt", "<cmd>NvimTreeToggle<CR>", {})
       vim.keymap.set("n", "<leader>nf", "<cmd>NvimTreeFindFile<CR>", {})
+      require('nvim-tree.api').events.subscribe("TreeOpen", function ()
+            vim.wo.statusline = ' '
+      end)
     end
 }
