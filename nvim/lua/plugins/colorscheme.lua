@@ -15,6 +15,11 @@ return {
                     iris = "#cf637e",
                 },
             },
+            groups = {
+                git_add = "#a6da95",
+                git_change = "gold",
+                git_delete = "love",
+            },
         })
         vim.cmd("colorscheme rose-pine")
     end
