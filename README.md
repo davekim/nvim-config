@@ -13,3 +13,11 @@ script that will create symlinks to `~/.config/nvim`.
 ```bash
 ./activate.sh
 ```
+
+## Requirements
+
+In order for treesitter `\fg` to work, you need [ripgrep](https://github.com/BurntSushi/ripgrep) installed.
+
+```bash
+brew install ripgrep
+```
