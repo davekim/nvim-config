@@ -23,6 +23,7 @@ return {
             },
             highlight_groups = {
                 Visual = { bg = "subtle", blend = 15 },
+                NvimTreeCursorLine = { bg = "subtle", blend = 15 },
                 TelescopeBorder = { fg = "highlight_high", bg = "none" },
                 TelescopeNormal = { bg = "none" },
                 TelescopePromptNormal = { bg = "base" },
