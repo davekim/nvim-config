@@ -13,6 +13,7 @@ return {
                     gold = "#f9bd98",
                     foam = "#bacacc",
                     iris = "#cf637e",
+                    surface = "#242323",
                 },
             },
             groups = {
