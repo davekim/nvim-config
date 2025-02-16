@@ -28,7 +28,7 @@ return {
                 TelescopePromptNormal = { bg = "base" },
                 TelescopeResultsNormal = { fg = "subtle", bg = "none" },
                 TelescopeSelection = { fg = "text", bg = "base" },
-                TelescopeSelectionCaret = { fg = "rose", bg = "rose" },
+                TelescopeSelectionCaret = { fg = "foam", bg = "foam" },
             }
         })
         vim.cmd("colorscheme rose-pine")
