@@ -5,4 +5,5 @@
 -- vim.g.maplocalleader = "\\"
 
 -- Toggle comments
-vim.keymap.set({"n", "v"}, "<leader>cc", "gc<CR>", {remap = true})
+vim.keymap.set("n", "<leader>cc", "gcc", {remap = true})
+vim.keymap.set("v", "<leader>cc", "gc", {remap = true})
