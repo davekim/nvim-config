@@ -32,7 +32,16 @@ return {
                 capabilities = capabilities
             })
             lspconfig.gopls.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                settings = {
+                    gopls = {
+                        completeUnimported = true,
+                        usePlaceholders = true,
+                        analyses = {
+                            unusedparams = true,
+                        },
+                    }
+                }
             })
 
             vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
