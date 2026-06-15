@@ -44,6 +44,14 @@ return {
                 }
             })
 
+            -- format Go files with gopls before saving
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                pattern = "*.go",
+                callback = function()
+                    vim.lsp.buf.format({ async = false })
+                end,
+            })
+
             vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
             vim.keymap.set("n", "<leader>bd", vim.lsp.buf.definition, {})
             vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
