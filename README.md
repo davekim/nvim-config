@@ -5,7 +5,7 @@ A minimal configuration for Neovim written in Lua.
 
 Uses `lazy.nvim` to manage plugins and `mason.nvim` to manage LSP servers.
 
-Plugins installed: Telescope, Treesitter, nvim-cmp, LuaSnip, nvim-tree, gitsigns, fugitive, autopairs, indent-blankline, vim-test, and LSPs for Lua, TypeScript, Ruby, and Python.
+Provides LSP completion, syntax highlighting, file navigation, Git integration, testing via tmux, and Go debugging out of the box.
 
 ## Requirements
 
@@ -55,6 +55,4 @@ Open Neovim:
 nvim
 ```
 
-`lazy.nvim` will automatically install all plugins on the first launch. After plugins finish installing, Mason will install the LSP servers (`lua_ls`, `ts_ls`, `ruby_lsp`, `pyright`) — you can monitor progress with `:Mason`.
-
-Treesitter will compile parsers for the configured languages on first use.
+`lazy.nvim` will automatically install all plugins on the first launch. Mason will then install the configured LSP servers — monitor progress with `:Mason`. Treesitter parsers compile on first use.
