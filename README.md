@@ -27,9 +27,15 @@ brew install git
 # C compiler — required by Treesitter to compile parsers
 # On macOS, install Xcode Command Line Tools:
 xcode-select --install
+
+# Go — required by gopls (LSP) and nvim-dap-go (debugger)
+brew install go
+
+# tmux — required by vimux, which vim-test uses to run tests
+brew install tmux
 ```
 
-Ruby is also configured as an LSP target (`ruby_lsp`). If you don't use Ruby, you can remove it from `nvim/lua/plugins/lsp-config.lua`.
+Ruby is also configured as an LSP target (`ruby_lsp`). Ruby must be installed on the machine for Mason to install it. If you don't use Ruby, you can remove it from `nvim/lua/plugins/lsp-config.lua`.
 
 ## Install
 
