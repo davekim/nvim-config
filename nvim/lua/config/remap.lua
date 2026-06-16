@@ -1,6 +1,5 @@
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
+-- Set `mapleader` and `maplocalleader` before plugins load so mappings
+-- are correct. This is also a good place to set other options (vim.opt).
 -- vim.g.mapleader = " "
 -- vim.g.maplocalleader = "\\"
 
