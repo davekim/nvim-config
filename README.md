@@ -12,7 +12,7 @@ Provides LSP completion, syntax highlighting, file navigation, Git integration, 
 Install these before running `activate.sh`:
 
 ```bash
-# Neovim (>= 0.9 recommended)
+# Neovim (>= 0.11 required by the current nvim-treesitter)
 brew install neovim
 
 # Node + npm — required by Mason to install ts_ls and pyright
@@ -27,6 +27,10 @@ brew install git
 # C compiler — required by Treesitter to compile parsers
 # On macOS, install Xcode Command Line Tools:
 xcode-select --install
+
+# tree-sitter CLI — required by nvim-treesitter to build parsers
+# (the `tree-sitter` formula is only the library; the CLI is separate)
+brew install tree-sitter-cli
 
 # Go — required by gopls (LSP) and nvim-dap-go (debugger)
 brew install go
