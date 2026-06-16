@@ -3,7 +3,7 @@ A minimal configuration for Neovim written in Lua.
 
 ## Overview
 
-Uses `lazy.nvim` to manage plugins and `mason.nvim` to manage LSP servers.
+Uses `vim.pack` (Neovim's built-in plugin manager) and `mason.nvim` to manage LSP servers.
 
 Provides LSP completion, syntax highlighting, file navigation, Git integration, testing via tmux, and Go debugging out of the box.
 
@@ -23,7 +23,7 @@ brew install node
 # ripgrep — required for Telescope live grep (\fg)
 brew install ripgrep
 
-# Git — required by lazy.nvim to fetch plugins
+# Git — required by vim.pack to fetch plugins
 brew install git
 
 # C compiler — required by Treesitter to compile parsers
@@ -61,4 +61,4 @@ Open Neovim:
 nvim
 ```
 
-`lazy.nvim` will automatically install all plugins on the first launch. Mason will then install the configured LSP servers — monitor progress with `:Mason`. Treesitter parsers compile on first use.
+`vim.pack` will automatically install all plugins on the first launch. Mason will then install the configured LSP servers — monitor progress with `:Mason`. Treesitter parsers compile on first use.

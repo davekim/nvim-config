@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke-test:
+    name: Fresh-install smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned for reproducibility; bump to match your local Neovim.
+      # vim.pack requires Neovim >= 0.12.
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.12.3
+
+      - name: Confirm Neovim >= 0.12 (required by vim.pack)
+        run: |
+          nvim --version | head -1
+          nvim --headless \
+            -c 'lua assert(vim.fn.has("nvim-0.12") == 1, "need Neovim >= 0.12 for vim.pack")' \
+            -c 'qa!'
+
+      # Needed so nvim-treesitter can compile parsers.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install tree-sitter CLI
+        run: npm install -g tree-sitter-cli
+
+      # Mimic activate.sh: point Neovim's config dir at the repo.
+      - name: Link config
+        run: |
+          mkdir -p "$HOME/.config"
+          ln -s "$GITHUB_WORKSPACE/nvim" "$HOME/.config/nvim"
+
+      # vim.pack installs synchronously during init; the wait lets the
+      # async treesitter parser compilation finish too.
+      - name: First launch (installs pinned plugins + compiles parsers)
+        run: nvim --headless -c 'lua vim.defer_fn(function() vim.cmd("qa!") end, 120000)'
+
+      - name: Verify config loads (28 plugins, core modules, colorscheme)
+        run: |
+          nvim --headless \
+            -c 'lua assert(#vim.pack.get() == 28, "expected 28 plugins, got " .. #vim.pack.get())' \
+            -c 'lua for _, m in ipairs({ "cmp", "telescope", "gitsigns", "dap", "nvim-tree", "mason", "nvim-treesitter" }) do assert(pcall(require, m), "module failed to load: " .. m) end' \
+            -c 'lua assert(vim.g.colors_name == "rose-pine", "colorscheme not applied")' \
+            -c 'lua io.write("OK: 28 plugins, core modules load, rose-pine applied\n")' \
+            -c 'qa!'
+
+      - name: Verify every plugin is at its pinned commit
+        run: |
+          opt="$HOME/.local/share/nvim/site/pack/core/opt"
+          bad=0
+          for d in "$opt"/*/; do
+            name=$(basename "$d")
+            actual=$(git -C "$d" rev-parse HEAD)
+            pinned=$(grep -A2 "\"$name\"" nvim/nvim-pack-lock.json \
+              | grep -oE '"rev": "[0-9a-f]{40}"' | grep -oE '[0-9a-f]{40}' | head -1)
+            if [ -n "$pinned" ] && [ "$actual" != "$pinned" ]; then
+              echo "MISMATCH $name: installed=$actual pinned=$pinned"
+              bad=1
+            fi
+          done
+          if [ "$bad" -eq 0 ]; then echo "all plugins at pinned commits"; fi
+          exit "$bad"
