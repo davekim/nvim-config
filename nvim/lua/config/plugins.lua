@@ -1,20 +1,18 @@
--- Plugin management via vim.pack (Neovim 0.12 built-in).
--- Replaces lazy.nvim: no bootstrap, no spec DSL. We install plugins with
--- vim.pack.add({...}) and then run each plugin's setup as plain Lua.
+-- Plugin management with vim.pack: install plugins with vim.pack.add({...}),
+-- then configure each one as plain Lua below.
 --
--- vim.pack has no dependency resolution, so dependencies are listed BEFORE
--- their dependents (add() is synchronous; order = load order). It has no
--- per-spec merging, so the two former nvim-cmp specs are consolidated here.
--- Reproducibility is handled by vim.pack's own lockfile (vim.pack-lockfile in
--- stdpath("state")), generated on first install.
+-- Dependencies must be listed before the plugins that need them -- add() is
+-- synchronous, so list order is load order. Pinned revisions are recorded in
+-- nvim-pack-lock.json (next to init.lua), written on first install.
 
 local function gh(x)
   return "https://github.com/" .. x
 end
 
 -- 1) INSTALL -----------------------------------------------------------------
--- Missing plugins are cloned on first launch (the "auto-install"). Treesitter
--- and telescope are pinned to the commits verified against Neovim 0.12.
+-- Missing plugins are cloned on first launch. nvim-treesitter is pinned to a
+-- specific commit via its version field; the rest track their default branch
+-- (with exact revisions captured in the lockfile).
 vim.pack.add({
   -- shared dependencies, listed before the plugins that need them
   gh("nvim-lua/plenary.nvim"),
@@ -52,8 +50,7 @@ vim.pack.add({
 })
 
 -- 2) BUILD HOOK --------------------------------------------------------------
--- Replaces lazy's `build = ":TSUpdate"`: recompile parsers when nvim-treesitter
--- is installed or updated.
+-- Recompile parsers whenever nvim-treesitter is installed or updated.
 vim.api.nvim_create_autocmd("PackChanged", {
   callback = function(ev)
     if ev.data.spec.name == "nvim-treesitter" and ev.data.kind ~= "delete" then
@@ -101,10 +98,8 @@ require("nvim-treesitter").install({
   "lua", "vim", "vimdoc", "query", "ruby", "c", "python", "javascript", "html", "go",
 })
 
--- completion (the two former cmp specs, merged). Deferred to the first
--- InsertEnter so the completion stack (cmp + LuaSnip + friendly-snippets)
--- isn't loaded at startup -- the manual equivalent of lazy's
--- `event = "InsertEnter"`, which vim.pack has no built-in mechanism for.
+-- completion. Deferred to the first InsertEnter so the completion stack
+-- (cmp + LuaSnip + friendly-snippets) isn't loaded until it's needed.
 vim.api.nvim_create_autocmd("InsertEnter", {
   once = true,
   callback = function()
@@ -143,9 +138,9 @@ require("mason-lspconfig").setup({
   ensure_installed = { "lua_ls", "ts_ls", "ruby_lsp", "pyright", "gopls" },
 })
 do
-  -- Neovim 0.11+ native LSP API. nvim-lspconfig now only ships the server
-  -- definitions (lsp/*.lua on the runtimepath); we configure and enable them
-  -- via vim.lsp instead of the deprecated require("lspconfig") framework.
+  -- Configure servers via the native vim.lsp API. nvim-lspconfig provides the
+  -- server definitions (lsp/*.lua on the runtimepath); vim.lsp.config sets
+  -- options and vim.lsp.enable starts them.
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
   vim.lsp.config("*", { capabilities = capabilities })
   vim.lsp.config("gopls", {
