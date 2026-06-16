@@ -9,10 +9,12 @@ Provides LSP completion, syntax highlighting, file navigation, Git integration, 
 
 ## Requirements
 
+**Neovim >= 0.11** is required (the current `nvim-treesitter` drops the `configs` module and relies on built-in Treesitter highlighting). Tested on 0.12.3.
+
 Install these before running `activate.sh`:
 
 ```bash
-# Neovim (>= 0.11 required by the current nvim-treesitter)
+# Neovim
 brew install neovim
 
 # Node + npm — required by Mason to install ts_ls and pyright
