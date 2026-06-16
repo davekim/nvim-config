@@ -135,14 +135,12 @@ require("mason-lspconfig").setup({
   ensure_installed = { "lua_ls", "ts_ls", "ruby_lsp", "pyright", "gopls" },
 })
 do
+  -- Neovim 0.11+ native LSP API. nvim-lspconfig now only ships the server
+  -- definitions (lsp/*.lua on the runtimepath); we configure and enable them
+  -- via vim.lsp instead of the deprecated require("lspconfig") framework.
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
-  local lspconfig = require("lspconfig")
-  lspconfig.lua_ls.setup({ capabilities = capabilities })
-  lspconfig.ts_ls.setup({ capabilities = capabilities })
-  lspconfig.ruby_lsp.setup({ capabilities = capabilities })
-  lspconfig.pyright.setup({ capabilities = capabilities })
-  lspconfig.gopls.setup({
-    capabilities = capabilities,
+  vim.lsp.config("*", { capabilities = capabilities })
+  vim.lsp.config("gopls", {
     settings = {
       gopls = {
         completeUnimported = true,
@@ -153,6 +151,7 @@ do
       },
     },
   })
+  vim.lsp.enable({ "lua_ls", "ts_ls", "ruby_lsp", "pyright", "gopls" })
 
   -- format Go files with gopls before saving
   vim.api.nvim_create_autocmd("BufWritePre", {
