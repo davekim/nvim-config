@@ -101,32 +101,40 @@ require("nvim-treesitter").install({
   "lua", "vim", "vimdoc", "query", "ruby", "c", "python", "javascript", "html", "go",
 })
 
--- completion (the two former cmp specs, merged)
-require("luasnip.loaders.from_vscode").lazy_load()
-local cmp = require("cmp")
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      require("luasnip").lsp_expand(args.body)
-    end,
-  },
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  },
-  mapping = cmp.mapping.preset.insert({
-    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping.complete(),
-    ["<C-e>"] = cmp.mapping.abort(),
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-  }),
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    { name = "luasnip" },
-  }, {
-    { name = "buffer" },
-  }),
+-- completion (the two former cmp specs, merged). Deferred to the first
+-- InsertEnter so the completion stack (cmp + LuaSnip + friendly-snippets)
+-- isn't loaded at startup -- the manual equivalent of lazy's
+-- `event = "InsertEnter"`, which vim.pack has no built-in mechanism for.
+vim.api.nvim_create_autocmd("InsertEnter", {
+  once = true,
+  callback = function()
+    require("luasnip.loaders.from_vscode").lazy_load()
+    local cmp = require("cmp")
+    cmp.setup({
+      snippet = {
+        expand = function(args)
+          require("luasnip").lsp_expand(args.body)
+        end,
+      },
+      window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+      },
+      mapping = cmp.mapping.preset.insert({
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<C-e>"] = cmp.mapping.abort(),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
+      }),
+      sources = cmp.config.sources({
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+      }, {
+        { name = "buffer" },
+      }),
+    })
+  end,
 })
 
 -- LSP stack: mason -> mason-lspconfig -> nvim-lspconfig
