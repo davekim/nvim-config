@@ -1,3 +1,5 @@
+vim.opt.clipboard = 'unnamedplus'
+
 -- Edit
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
